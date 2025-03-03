@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/Users/anis/Documents/horizon/app-shell-api/platform/ui/view-struct/api/src'
+let g:netrw_dirhist_7='/Users/anis/Documents/horizon/app-shell-api/platform/ui/view-struct/api'
+let g:netrw_dirhist_6='/Users/anis/Documents/horizon/hz-bazel/platform/ui/view-struct/sample-app'
+let g:netrw_dirhist_5='/Users/anis/Documents/horizon/hz-bazel/platform/ui/view-struct/api'
+let g:netrw_dirhist_4='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components'
+let g:netrw_dirhist_3='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src/components/hz-app-frame'
+let g:netrw_dirhist_2='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src/components'
+let g:netrw_dirhist_1='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src'
+let g:netrw_dirhist_0='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components'
+let g:netrw_dirhist_9='/Users/anis/Documents/horizon/view-struct-sample-app/platform/ui/view-struct/src'
