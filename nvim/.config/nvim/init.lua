@@ -166,6 +166,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- CUSTOM ERROR FLOAT
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -412,6 +415,17 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      -- search/grep in specific path
+      local function telescope_live_grep_in_supplied_folder()
+        vim.ui.input({ prompt = 'Enter Search Folder Path: ' }, function(input)
+          if input and input ~= '' then
+            builtin.live_grep { search_dirs = { input } }
+          end
+        end)
+      end
+
+      vim.keymap.set('n', '<leader>sgf', telescope_live_grep_in_supplied_folder, { desc = 'Live Grep in Supplied Folder' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
