@@ -699,7 +699,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, javascript = true }
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
@@ -718,6 +718,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier' },
         typescript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
@@ -925,7 +926,19 @@ require('lazy').setup({
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
+    opts = {
+      on_attach = function(client, bufnr)
+        vim.keymap.set('n', '<leader>ai', '<cmd>TSToolsAddMissingImports<CR>', { buffer = bufnr, desc = 'Add Missing Imports' })
+        vim.keymap.set('n', '<leader>oi', '<cmd>TSToolsOrganizeImports<CR>', { buffer = bufnr, desc = 'Organize Imports' })
+        vim.keymap.set('n', '<leader>fa', '<cmd>TSToolsFixAll<CR>', { buffer = bufnr, desc = 'Fix All' })
+        -- vim.api.nvim_create_autocmd("BufWritePre", {
+        --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+        --   callback = function()
+        --     vim.cmd("TSToolsAddMissingImports")
+        --   end,
+        -- })
+      end,
+    },
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
