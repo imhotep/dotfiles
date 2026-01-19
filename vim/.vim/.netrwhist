@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =8
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/Users/anis/dev/horizon/af-navigation-service-poc/platform/common/app-framework/navigation-service/sample-app'
+let g:netrw_dirhist_9='/Users/anis/Documents/horizon/neural-start-performance-store/apps/project-x/features/x-client-telemetry/src/bricks'
 let g:netrw_dirhist_8='/Users/anis/Documents/horizon/app-shell-api/platform/ui/view-struct/api/src'
 let g:netrw_dirhist_7='/Users/anis/Documents/horizon/app-shell-api/platform/ui/view-struct/api'
 let g:netrw_dirhist_6='/Users/anis/Documents/horizon/hz-bazel/platform/ui/view-struct/sample-app'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_4='/Users/anis/Documents/horizon/hz/platform/ui/components/w
 let g:netrw_dirhist_3='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src/components/hz-app-frame'
 let g:netrw_dirhist_2='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src/components'
 let g:netrw_dirhist_1='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components/src'
-let g:netrw_dirhist_0='/Users/anis/Documents/horizon/hz/platform/ui/components/web-components'
-let g:netrw_dirhist_9='/Users/anis/Documents/horizon/view-struct-sample-app/platform/ui/view-struct/src'

@@ -90,6 +90,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = '\\'
 
+-- Use a specific Node binary
+vim.g.copilot_node_command = '/Users/anis/.nvm/versions/node/v22.17.1/bin/node'
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -232,6 +235,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'github/copilot.vim',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -339,7 +343,6 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -640,7 +643,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -937,23 +940,23 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {
-      on_attach = function(client, bufnr)
-        vim.keymap.set('n', '<leader>ai', '<cmd>TSToolsAddMissingImports<CR>', { buffer = bufnr, desc = 'Add Missing Imports' })
-        vim.keymap.set('n', '<leader>oi', '<cmd>TSToolsOrganizeImports<CR>', { buffer = bufnr, desc = 'Organize Imports' })
-        vim.keymap.set('n', '<leader>fa', '<cmd>TSToolsFixAll<CR>', { buffer = bufnr, desc = 'Fix All' })
-        -- vim.api.nvim_create_autocmd("BufWritePre", {
-        --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
-        --   callback = function()
-        --     vim.cmd("TSToolsAddMissingImports")
-        --   end,
-        -- })
-      end,
-    },
-  },
+  -- {
+  --   'pmizio/typescript-tools.nvim',
+  --   dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+  --   opts = {
+  --     on_attach = function(client, bufnr)
+  --       vim.keymap.set('n', '<leader>ai', '<cmd>TSToolsAddMissingImports<CR>', { buffer = bufnr, desc = 'Add Missing Imports' })
+  --       vim.keymap.set('n', '<leader>oi', '<cmd>TSToolsOrganizeImports<CR>', { buffer = bufnr, desc = 'Organize Imports' })
+  --       vim.keymap.set('n', '<leader>fa', '<cmd>TSToolsFixAll<CR>', { buffer = bufnr, desc = 'Fix All' })
+  --       -- vim.api.nvim_create_autocmd("BufWritePre", {
+  --       --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+  --       --   callback = function()
+  --       --     vim.cmd("TSToolsAddMissingImports")
+  --       --   end,
+  --       -- })
+  --     end,
+  --   },
+  -- },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and

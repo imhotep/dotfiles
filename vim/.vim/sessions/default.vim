@@ -70,8 +70,8 @@ nnoremap <silent> \s :Ag
 nnoremap <silent> \m :GFilesMonorepo
 nnoremap <silent> \\ :Files
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-xmap gx <Plug>NetrwBrowseXVis
-nmap gx <Plug>NetrwBrowseX
+xmap gx <Plug>(open-word-under-cursor)
+nmap gx <Plug>(open-word-under-cursor)
 nmap gcu <Plug>Commentary<Plug>Commentary
 nmap gcc <Plug>CommentaryLine
 omap gc <Plug>Commentary
@@ -98,9 +98,9 @@ nnoremap <silent> <Plug>(coc-git-prevconflict) :call coc#rpc#notify('doKeymap'
 nnoremap <silent> <Plug>(coc-git-nextconflict) :call coc#rpc#notify('doKeymap', ['coc-git-nextconflict'])
 nnoremap <silent> <Plug>(coc-git-prevchunk) :call coc#rpc#notify('doKeymap', ['coc-git-prevchunk'])
 nnoremap <silent> <Plug>(coc-git-nextchunk) :call coc#rpc#notify('doKeymap', ['coc-git-nextchunk'])
-nnoremap <SNR>43_: :=v:count ? v:count : ''
-xnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
-nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(netrw#GX(),netrw#CheckIfRemote(netrw#GX()))
+nnoremap <SNR>48_: :=v:count ? v:count : ''
+xnoremap <Plug>(open-word-under-cursor) <ScriptCmd>vim9.Open(getregion(getpos('v'), getpos('.'), { type: mode() })->join())
+nnoremap <Plug>(open-word-under-cursor) <ScriptCmd>vim9.Open(GetWordUnderCursor())
 onoremap <silent> <Plug>(coc-classobj-a) :call CocAction('selectSymbolRange', v:false, '', ['Interface', 'Struct', 'Class'])
 onoremap <silent> <Plug>(coc-classobj-i) :call CocAction('selectSymbolRange', v:true, '', ['Interface', 'Struct', 'Class'])
 vnoremap <silent> <Plug>(coc-classobj-a) :call CocAction('selectSymbolRange', v:false, visualmode(), ['Interface', 'Struct', 'Class'])
@@ -197,13 +197,12 @@ set modelines=0
 set mouse=a
 set regexpengine=0
 set ruler
-set runtimepath=~/.vim,~/.vim/plugged/vim-fugitive,~/.vim/plugged/vim-commentary,~/.vim/plugged/fzf,~/.vim/plugged/fzf.vim,~/.vim/plugged/editorconfig-vim,~/.vim/plugged/coc.nvim,~/.vim/plugged/copilot.vim,~/.vim/plugged/vim-terraform,/usr/share/vim/vimfiles,/usr/share/vim/vim91,/usr/share/vim/vimfiles/after,~/.vim/after,/opt/homebrew/opt/fzf
+set runtimepath=~/.vim,~/.vim/plugged/vim-fugitive,~/.vim/plugged/vim-commentary,~/.vim/plugged/fzf,~/.vim/plugged/fzf.vim,~/.vim/plugged/editorconfig-vim,~/.vim/plugged/coc.nvim,~/.vim/plugged/copilot.vim,~/.vim/plugged/vim-terraform,/usr/share/vim/vimfiles,/usr/share/vim/vim91,/usr/share/vim/vim91/pack/dist/opt/netrw,/usr/share/vim/vimfiles/after,~/.vim/after,/opt/homebrew/opt/fzf
 set shiftwidth=4
 set shortmess=filnxtToOSc
 set noswapfile
 set tabstop=4
 set updatetime=300
-set wildmenu
 set wildmode=longest:full,full
 set window=0
 set nowritebackup
@@ -211,20 +210,16 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd ~/Documents/horizon/hydrate-viewstruct
+cd ~/dev/horizon/update-navigation-poc
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
-if &shortmess =~ 'A'
-  set shortmess=aoOA
-else
-  set shortmess=aoO
-endif
-badd +0 ~/Documents/horizon/hz/.git/worktrees/hydrate-viewstruct/MERGE_MSG
+set shortmess+=aoO
+badd +0 ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
 argglobal
 %argdel
-$argadd ~/Documents/horizon/hz/.git/worktrees/hydrate-viewstruct/MERGE_MSG
-edit ~/Documents/horizon/hz/.git/worktrees/hydrate-viewstruct/MERGE_MSG
+$argadd ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
+edit ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
@@ -263,13 +258,16 @@ setlocal cursorlineopt=both
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
+setlocal diffanchors=
 setlocal equalprg=
 setlocal errorformat=
+setlocal eventignorewin=
 setlocal expandtab
 if &filetype != 'gitcommit'
 setlocal filetype=gitcommit
 endif
 setlocal fillchars=
+setlocal findfunc=
 setlocal fixendofline
 setlocal foldcolumn=0
 setlocal foldenable
@@ -285,6 +283,7 @@ setlocal formatexpr=
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}]\\s\\+\\|^\\s*[-*+]\\s\\+
 setlocal formatoptions=tln
 setlocal formatprg=
+setlocal grepformat=
 setlocal grepprg=
 setlocal iminsert=0
 setlocal imsearch=-1
@@ -293,8 +292,10 @@ setlocal includeexpr=substitute(v:fname,'^[bi]/','','')
 setlocal indentexpr=
 setlocal indentkeys=0{,0},0),0],:,0#,!^F,o,O,e
 setlocal noinfercase
+setlocal isexpand=
 setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
+setlocal lhistory=10
 setlocal nolinebreak
 setlocal nolisp
 setlocal lispoptions=
