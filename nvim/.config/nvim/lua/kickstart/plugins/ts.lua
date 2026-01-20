@@ -1,0 +1,10 @@
+-- -- LSP setup for tsserver
+-- require('lspconfig').tsserver.setup {
+--   root_dir = require('lspconfig.util').find_git_ancestor, -- Adjust as needed for Bazel workspace root
+--   settings = {
+--     -- ts specific settings if needed
+--   },
+-- }
+--
+-- -- Keybinding example for Bazel build
+-- vim.keymap.set('n', '<leader>bb', ':!bazel build //...<CR>', { desc = 'Bazel Build All' })

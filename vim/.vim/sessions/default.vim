@@ -70,8 +70,8 @@ nnoremap <silent> \s :Ag
 nnoremap <silent> \m :GFilesMonorepo
 nnoremap <silent> \\ :Files
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
-xmap gx <Plug>NetrwBrowseXVis
-nmap gx <Plug>NetrwBrowseX
+xmap gx <Plug>(open-word-under-cursor)
+nmap gx <Plug>(open-word-under-cursor)
 nmap gcu <Plug>Commentary<Plug>Commentary
 nmap gcc <Plug>CommentaryLine
 omap gc <Plug>Commentary
@@ -98,8 +98,9 @@ nnoremap <silent> <Plug>(coc-git-prevconflict) :call coc#rpc#notify('doKeymap'
 nnoremap <silent> <Plug>(coc-git-nextconflict) :call coc#rpc#notify('doKeymap', ['coc-git-nextconflict'])
 nnoremap <silent> <Plug>(coc-git-prevchunk) :call coc#rpc#notify('doKeymap', ['coc-git-prevchunk'])
 nnoremap <silent> <Plug>(coc-git-nextchunk) :call coc#rpc#notify('doKeymap', ['coc-git-nextchunk'])
-xnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
-nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(netrw#GX(),netrw#CheckIfRemote(netrw#GX()))
+nnoremap <SNR>48_: :=v:count ? v:count : ''
+xnoremap <Plug>(open-word-under-cursor) <ScriptCmd>vim9.Open(getregion(getpos('v'), getpos('.'), { type: mode() })->join())
+nnoremap <Plug>(open-word-under-cursor) <ScriptCmd>vim9.Open(GetWordUnderCursor())
 onoremap <silent> <Plug>(coc-classobj-a) :call CocAction('selectSymbolRange', v:false, '', ['Interface', 'Struct', 'Class'])
 onoremap <silent> <Plug>(coc-classobj-i) :call CocAction('selectSymbolRange', v:true, '', ['Interface', 'Struct', 'Class'])
 vnoremap <silent> <Plug>(coc-classobj-a) :call CocAction('selectSymbolRange', v:false, visualmode(), ['Interface', 'Struct', 'Class'])
@@ -196,13 +197,12 @@ set modelines=0
 set mouse=a
 set regexpengine=0
 set ruler
-set runtimepath=~/.vim,~/.vim/plugged/vim-fugitive,~/.vim/plugged/vim-commentary,~/.vim/plugged/fzf,~/.vim/plugged/fzf.vim,~/.vim/plugged/editorconfig-vim,~/.vim/plugged/coc.nvim,~/.vim/plugged/copilot.vim,~/.vim/plugged/vim-terraform,/usr/share/vim/vimfiles,/usr/share/vim/vim90,/usr/share/vim/vimfiles/after,~/.vim/after,/opt/homebrew/opt/fzf
+set runtimepath=~/.vim,~/.vim/plugged/vim-fugitive,~/.vim/plugged/vim-commentary,~/.vim/plugged/fzf,~/.vim/plugged/fzf.vim,~/.vim/plugged/editorconfig-vim,~/.vim/plugged/coc.nvim,~/.vim/plugged/copilot.vim,~/.vim/plugged/vim-terraform,/usr/share/vim/vimfiles,/usr/share/vim/vim91,/usr/share/vim/vim91/pack/dist/opt/netrw,/usr/share/vim/vimfiles/after,~/.vim/after,/opt/homebrew/opt/fzf
 set shiftwidth=4
 set shortmess=filnxtToOSc
 set noswapfile
 set tabstop=4
 set updatetime=300
-set wildmenu
 set wildmode=longest:full,full
 set window=0
 set nowritebackup
@@ -210,21 +210,24 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd ~/Documents/horizon/feedback-analytics
+cd ~/dev/horizon/update-navigation-poc
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
-if &shortmess =~ 'A'
-  set shortmess=aoOA
-else
-  set shortmess=aoO
-endif
-badd +0 rush.json
+set shortmess+=aoO
+badd +0 ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
 argglobal
 %argdel
-$argadd rush.json
-edit rush.json
+$argadd ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
+edit ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
 argglobal
+let s:cpo_save=&cpo
+set cpo&vim
+cmap <buffer> <nowait> <C-R><C-F> <Plug><cfile>
+cnoremap <buffer> <expr> <Plug><cfile> fugitive#MessageCfile()
+cmap <buffer> <nowait>  <Plug><cfile>
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal noautoindent
 setlocal backupcopy=
 setlocal nobinary
@@ -239,12 +242,13 @@ setlocal cinoptions=
 setlocal cinscopedecls=public,protected,private
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=
-setlocal commentstring=
+setlocal comments=:#
+setlocal commentstring=#\ %s
 setlocal complete=.,w,b,u,t,i
+setlocal completefunc=
+setlocal completeopt=
 setlocal concealcursor=
 setlocal conceallevel=0
-setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -254,13 +258,16 @@ setlocal cursorlineopt=both
 setlocal define=
 setlocal dictionary=
 setlocal nodiff
+setlocal diffanchors=
 setlocal equalprg=
 setlocal errorformat=
+setlocal eventignorewin=
 setlocal expandtab
-if &filetype != 'json'
-setlocal filetype=json
+if &filetype != 'gitcommit'
+setlocal filetype=gitcommit
 endif
 setlocal fillchars=
+setlocal findfunc=
 setlocal fixendofline
 setlocal foldcolumn=0
 setlocal foldenable
@@ -271,21 +278,24 @@ setlocal foldmarker={{{,}}}
 setlocal foldmethod=manual
 setlocal foldminlines=1
 setlocal foldnestmax=20
-setlocal foldtext=foldtext()
-setlocal formatexpr=CocAction('formatSelected')
-setlocal formatoptions=cq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal foldtext=fugitive#Foldtext()
+setlocal formatexpr=
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}]\\s\\+\\|^\\s*[-*+]\\s\\+
+setlocal formatoptions=tln
 setlocal formatprg=
+setlocal grepformat=
 setlocal grepprg=
 setlocal iminsert=0
 setlocal imsearch=-1
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetJSONIndent(v:lnum)
-setlocal indentkeys=0{,0},0),0[,0],!^F,o,O,e
+setlocal include=^+++
+setlocal includeexpr=substitute(v:fname,'^[bi]/','','')
+setlocal indentexpr=
+setlocal indentkeys=0{,0},0),0],:,0#,!^F,o,O,e
 setlocal noinfercase
+setlocal isexpand=
 setlocal iskeyword=@,48-57,_,192-255
 setlocal keywordprg=
+setlocal lhistory=10
 setlocal nolinebreak
 setlocal nolisp
 setlocal lispoptions=
@@ -295,7 +305,7 @@ setlocal listchars=
 setlocal makeencoding=
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
-setlocal modeline
+setlocal nomodeline
 setlocal modifiable
 setlocal nrformats=bin,octal,hex
 set number
@@ -328,8 +338,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal noswapfile
 setlocal synmaxcol=3000
-if &syntax != 'json'
-setlocal syntax=json
+if &syntax != 'gitcommit'
+setlocal syntax=gitcommit
 endif
 setlocal tabstop=4
 setlocal tagcase=
@@ -338,25 +348,26 @@ setlocal tags=
 setlocal termwinkey=
 setlocal termwinscroll=10000
 setlocal termwinsize=
-setlocal textwidth=0
+setlocal textwidth=72
 setlocal thesaurus=
 setlocal thesaurusfunc=
 setlocal noundofile
 setlocal undolevels=-123456
 setlocal virtualedit=
 setlocal wincolor=
+setlocal nowinfixbuf
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1812 - ((46 * winheight(0) + 47) / 94)
+let s:l = 1 - ((0 * winheight(0) + 40) / 80)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1812
-normal! 033|
+keepjumps 1
+normal! 0
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
@@ -369,6 +380,7 @@ if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
+nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

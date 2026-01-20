@@ -90,6 +90,9 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = '\\'
 vim.g.maplocalleader = '\\'
 
+-- Use a specific Node binary
+vim.g.copilot_node_command = '/Users/anis/.nvm/versions/node/v22.17.1/bin/node'
+
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
@@ -166,6 +169,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+-- CUSTOM ERROR FLOAT
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -229,6 +235,7 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'github/copilot.vim',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -336,7 +343,6 @@ require('lazy').setup({
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VimEnter',
-    branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -412,6 +418,17 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      -- search/grep in specific path
+      local function telescope_live_grep_in_supplied_folder()
+        vim.ui.input({ prompt = 'Enter Search Folder Path: ' }, function(input)
+          if input and input ~= '' then
+            builtin.live_grep { search_dirs = { input } }
+          end
+        end)
+      end
+
+      vim.keymap.set('n', '<leader>sgf', telescope_live_grep_in_supplied_folder, { desc = 'Live Grep in Supplied Folder' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -626,7 +643,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -662,7 +679,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup { ensure_installed = ensure_installed, features = { automatic_enable = false } }
 
       require('mason-lspconfig').setup {
         handlers = {
@@ -676,6 +693,10 @@ require('lazy').setup({
           end,
         },
       }
+      vim.lsp.config('*', {
+        on_attach = on_attach,
+        -- ....
+      })
     end,
   },
 
@@ -699,7 +720,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, javascript = true }
         local lsp_format_opt
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
@@ -718,6 +739,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier' },
         typescript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
@@ -900,7 +922,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    main = 'nvim-treesitter', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -922,11 +944,23 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-  {
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
-  },
+  -- {
+  --   'pmizio/typescript-tools.nvim',
+  --   dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+  --   opts = {
+  --     on_attach = function(client, bufnr)
+  --       vim.keymap.set('n', '<leader>ai', '<cmd>TSToolsAddMissingImports<CR>', { buffer = bufnr, desc = 'Add Missing Imports' })
+  --       vim.keymap.set('n', '<leader>oi', '<cmd>TSToolsOrganizeImports<CR>', { buffer = bufnr, desc = 'Organize Imports' })
+  --       vim.keymap.set('n', '<leader>fa', '<cmd>TSToolsFixAll<CR>', { buffer = bufnr, desc = 'Fix All' })
+  --       -- vim.api.nvim_create_autocmd("BufWritePre", {
+  --       --   pattern = { "*.ts", "*.tsx", "*.js", "*.jsx" },
+  --       --   callback = function()
+  --       --     vim.cmd("TSToolsAddMissingImports")
+  --       --   end,
+  --       -- })
+  --     end,
+  --   },
+  -- },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
