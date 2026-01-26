@@ -210,16 +210,16 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd ~/dev/horizon/update-navigation-poc
+cd ~/dotfiles
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess+=aoO
-badd +0 ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
+badd +0 .git/MERGE_MSG
 argglobal
 %argdel
-$argadd ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
-edit ~/dev/horizon/hz/.git/worktrees/update-navigation-poc/COMMIT_EDITMSG
+$argadd .git/MERGE_MSG
+edit .git/MERGE_MSG
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
@@ -328,7 +328,7 @@ set signcolumn=yes
 setlocal signcolumn=yes
 setlocal nosmartindent
 setlocal nosmoothscroll
-setlocal softtabstop=4
+setlocal softtabstop=0
 setlocal nospell
 setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
@@ -341,7 +341,7 @@ setlocal synmaxcol=3000
 if &syntax != 'gitcommit'
 setlocal syntax=gitcommit
 endif
-setlocal tabstop=4
+setlocal tabstop=8
 setlocal tagcase=
 setlocal tagfunc=
 setlocal tags=
@@ -362,7 +362,7 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 40) / 80)
+let s:l = 1 - ((0 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
