@@ -20,6 +20,15 @@ if !empty($SSH_TTY)
     autocmd!
     autocmd TextYankPost * if v:event.operator == 'y' | call Osc52Yank() | endif
   augroup END
+else
+  " Local: Auto-detect OS and use appropriate clipboard
+  if has('mac') || has('macunix')
+    " macOS uses * register
+    set clipboard=unnamed
+  else
+    " Linux/Windows use + register
+    set clipboard=unnamedplus
+  endif
 endif
 
 " ==================== Paste mode (prevents indentation mess) ====================
