@@ -1,0 +1,17 @@
+{
+  "providers": {
+    "vllm": {
+      "name": "vllm",
+      "base_url": "https://vllm.anislab.com/v1/",
+      "type": "openai-compat",
+      "models": [
+        {
+          "name": "Qwen-3.6-35B",
+          "id": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+          "context_window": 262144,
+          "default_max_tokens": 20000
+        }
+      ]
+    }
+  }
+}
