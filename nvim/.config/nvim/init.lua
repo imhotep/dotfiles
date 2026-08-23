@@ -62,6 +62,21 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- [[ Custom Keymaps ]]
+-- Copy current file path to clipboard
+vim.keymap.set('n', '<leader>cf', function()
+  local path = vim.fn.expand '%:p' -- Full path
+  vim.fn.setreg('+', path)
+  print('Copied: ' .. path)
+end, { desc = 'Copy file path' })
+
+-- Copy just the filename
+vim.keymap.set('n', '<leader>cn', function()
+  local name = vim.fn.expand '%:t' -- Just filename
+  vim.fn.setreg('+', name)
+  print('Copied: ' .. name)
+end, { desc = 'Copy filename' })
+
 -- Diagnostic Config & Keymaps
 vim.diagnostic.config {
   update_in_insert = false,
@@ -310,6 +325,17 @@ require('lazy').setup({
               },
               procMacro = {
                 enable = true,
+              },
+            },
+          },
+        },
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'workspace',
               },
             },
           },

@@ -1,0 +1,30 @@
+{
+  "providers": {
+    "vllm": {
+      "name": "vllm",
+      "base_url": "https://vllm.anislab.com/v1/",
+      "type": "openai-compat",
+      "models": [
+        {
+          "name": "Qwen-3.8-27B",
+          "id": "Inferact/Qwen3.8-27B-NVFP4",
+          "context_window": 262144,
+          "default_max_tokens": 20000
+        }
+      ]
+    },
+    "sglang": {
+      "name": "sglang",
+      "base_url": "http://192.168.1.203/v1/",
+      "type": "openai-compat",
+      "models": [
+        {
+          "name": "Qwen-3.8-27B",
+          "id": "RadixArk/Qwen3.8-27B-NVFP4",
+          "context_window": 262144,
+          "default_max_tokens": 20000
+        }
+      ]
+    }
+  }
+}
