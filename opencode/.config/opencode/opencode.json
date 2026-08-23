@@ -29,8 +29,8 @@
             "output": 8192
           }
         },
-        "nvidia/Qwen3.6-35B-A3B-NVFP4": {
-          "name": "Qwen3.6-35B-A3B-NVFP4",
+        "Inferact/Qwen3.8-27B-NVFP4": {
+          "name": "Qwen3.8-27B-NVFP4",
           "limit": {
             "context": 262144,
             "output": 8192
@@ -53,7 +53,19 @@
           }
         }
       }
+    },
+    "sglang": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "SGLang (Qwen3.8-27B)",
+      "options": {
+        "baseURL": "http://192.168.1.203:8000/v1"
+      },
+      "models": {
+        "RadixArk/Qwen3.8-27B-NVFP4": {
+          "name": "Qwen3.8-27B NVFP4"
+        }
+      }
     }
   },
-  "model": "vllm/nvidia/Qwen3.6-35B-A3B-NVFP4"
+  "model": "sglang/RadixArk/Qwen3.8-27B-NVFP4"
 }
