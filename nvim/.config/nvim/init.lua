@@ -299,6 +299,21 @@ require('lazy').setup({
       local servers = {
         ts_ls = {},
         stylua = {},
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              check = {
+                command = 'clippy', -- use clippy for better lints
+              },
+              cargo = {
+                allFeatures = true,
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+        },
         lua_ls = {
           on_init = function(client)
             if client.workspace_folders then
@@ -501,6 +516,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.claudecode',
   -- require 'kickstart.plugins.gitsigns',
 
   -- { import = 'custom.plugins' },
